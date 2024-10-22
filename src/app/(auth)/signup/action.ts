@@ -20,7 +20,9 @@ export async function signUp(
       outputLen: 32,
       parallelism: 1,
     });
+
     const userId = generateIdFromEntropySize(10);
+
     const existingUsername = await prisma.user.findFirst({
       where: {
         username: {
@@ -29,9 +31,13 @@ export async function signUp(
         },
       },
     });
+
     if (existingUsername) {
-      return { error: "Username already exists" };
+      return {
+        error: "Username already taken",
+      };
     }
+
     const existingEmail = await prisma.user.findFirst({
       where: {
         email: {
@@ -40,6 +46,7 @@ export async function signUp(
         },
       },
     });
+
     if (existingEmail) {
       return { error: "Email already exists" };
     }
@@ -60,10 +67,13 @@ export async function signUp(
       sessionCookie.value,
       sessionCookie.attributes,
     );
+
     return redirect("/");
   } catch (error) {
-    if (isRedirectError(error))  throw error;
+    if (isRedirectError(error)) throw error;
     console.error(error);
-    return { error: "An unexpected error occurred." };
+    return {
+      error: "Something went wrong. Please try again.",
+    };
   }
 }
