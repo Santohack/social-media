@@ -26,6 +26,7 @@ model User {
   bio          String?
   sessions     Session[]
   createdAt    DateTime  @default(now())
+  posts         Post[]
 
   @@map("users")
 }
@@ -34,7 +35,17 @@ model Session {
   id        String   @id
   userId    String
   expiresAt DateTime
-  User      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("posts")
 }
