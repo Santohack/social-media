@@ -9,8 +9,11 @@ import { Edit } from "lucide-react";
 import "./styles.css";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useSubmitPostMutation } from "./mutations";
+import LoadingButton from "@/components/ui/loadingButton";
 export default function PostEditor() {
   const { user } = useSession();
+  const  mutation = useSubmitPostMutation();
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -27,8 +30,12 @@ export default function PostEditor() {
       blockSeparator: "\n",
     }) || "";
 
-  async function onSubmit() {
-    await createPost(input);
+   function onSubmit() {
+    mutation.mutate(input ,{
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
     editor?.commands.clearContent();
   }
   return (
@@ -43,9 +50,9 @@ export default function PostEditor() {
         />
       </div>
       <div className="flex justify-end">
-      <Button onClick={onSubmit} disabled={!input.trim()} className="min-w-20">
+      <LoadingButton onClick={onSubmit} disabled={!input.trim()} loading={mutation.isPending} className="min-w-20">
         Post
-      </Button>
+      </LoadingButton>
       </div>
     </div>
   );

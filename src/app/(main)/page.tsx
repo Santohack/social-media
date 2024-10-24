@@ -4,20 +4,16 @@ import TrendSideBar from "@/components/TrendSideBar";
 import prisma from "@/lib/prisma";
 import { postDataInclude } from "@/lib/types";
 import Image from "next/image";
+import ForYouFeed from "./ForYouFeed";
 
 export default async function Home() {
-  const posts = await prisma?.post?.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: postDataInclude,
-  });
+  
   return (
     <main className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-5">
         <PostEditor />
 
-        {posts?.map((post) => <Post key={post.id} post={post} />)}
+       <ForYouFeed />
       </div>
       <TrendSideBar />
     </main>
