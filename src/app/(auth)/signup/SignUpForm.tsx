@@ -1,8 +1,7 @@
 "use client";
-import { signUpSchema, SignUpValues } from "@/lib/validation";
-import React, { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import LoadingButton from "@/components/LoadingButton";
+import { PasswordInput } from "@/components/PasswordInput";
 import {
   Form,
   FormControl,
@@ -12,14 +11,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { signUp } from "./action";
-import { PasswordInput } from "@/components/ui/passwordInput";
-import LoadingButton from "@/components/ui/loadingButton";
-
+import { signUpSchema, SignUpValues } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { signUp } from "./actions";
 
 export default function SignUpForm() {
-  const [err, setErr] = React.useState<string>();
+  const [error, setError] = useState<string>();
+
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<SignUpValues>({
@@ -30,20 +30,19 @@ export default function SignUpForm() {
       password: "",
     },
   });
+
   async function onSubmit(values: SignUpValues) {
-    setErr(undefined);
+    setError(undefined);
     startTransition(async () => {
       const { error } = await signUp(values);
-      if (error) {
-        setErr(error);
-      }
+      if (error) setError(error);
     });
-    
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        {err && <p className="text-center text-destructive">{err}</p>}
+        {error && <p className="text-center text-destructive">{error}</p>}
         <FormField
           control={form.control}
           name="username"
@@ -51,9 +50,8 @@ export default function SignUpForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter username" {...field} />
+                <Input placeholder="Username" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -65,9 +63,8 @@ export default function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Email" type="email" {...field} />
+                <Input placeholder="Email" type="email" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -79,15 +76,14 @@ export default function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-              <PasswordInput placeholder="Password" {...field} />
+                <PasswordInput placeholder="Password" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoadingButton className="w-full" type="submit" loading={isPending}>
-          Sign Up Now
+        <LoadingButton loading={isPending} type="submit" className="w-full">
+          Create account
         </LoadingButton>
       </form>
     </Form>

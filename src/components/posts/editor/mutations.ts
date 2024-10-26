@@ -1,13 +1,13 @@
 import { useSession } from "@/app/(main)/SessionProvider";
 import { useToast } from "@/components/ui/use-toast";
-import { PostPage } from "@/lib/types";
+import { PostsPage } from "@/lib/types";
 import {
   InfiniteData,
   QueryFilters,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createPost } from "./actions";
+import { submitPost } from "./actions";
 
 export function useSubmitPostMutation() {
   const { toast } = useToast();
@@ -17,7 +17,7 @@ export function useSubmitPostMutation() {
   const { user } = useSession();
 
   const mutation = useMutation({
-    mutationFn: createPost,
+    mutationFn: submitPost,
     onSuccess: async (newPost) => {
       const queryFilter = {
         queryKey: ["post-feed"],
@@ -32,7 +32,7 @@ export function useSubmitPostMutation() {
 
       await queryClient.cancelQueries(queryFilter);
 
-      queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
         queryFilter,
         (oldData) => {
           const firstPage = oldData?.pages[0];

@@ -1,16 +1,14 @@
-"use client";
 import { PostData } from "@/lib/types";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
-import DeletePostDialog from "./DeletePostDialog";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import DeletePostDialog from "./DeletePostDialog";
 
 interface PostMoreButtonProps {
   post: PostData;
@@ -22,24 +20,22 @@ export default function PostMoreButton({
   className,
 }: PostMoreButtonProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant={"ghost"} className={className}>
+          <Button size="icon" variant="ghost" className={className}>
             <MoreHorizontal className="size-5 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              setShowDeleteDialog(true);
-            }}
-          >
-          <Trash2 className="size-4 mr-2" />
-            Delete{" "}
+          <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+            <span className="flex items-center gap-3 text-destructive">
+              <Trash2 className="size-4" />
+              Delete
+            </span>
           </DropdownMenuItem>
-        
         </DropdownMenuContent>
       </DropdownMenu>
       <DeletePostDialog

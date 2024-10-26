@@ -2,10 +2,9 @@
 
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import Post from "@/components/posts/Post";
-import PostsLoadingSkeleton from "@/components/posts/PostLoadingSkeleton";
-
+import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 import kyInstance from "@/lib/ky";
-import { PostPage } from "@/lib/types";
+import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
@@ -29,7 +28,7 @@ export default function UserPosts({ userId }: UserPostsProps) {
           `/api/users/${userId}/posts`,
           pageParam ? { searchParams: { cursor: pageParam } } : {},
         )
-        .json<PostPage>(),
+        .json<PostsPage>(),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });

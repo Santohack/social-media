@@ -6,25 +6,22 @@ const nextConfig = {
     },
   },
   serverExternalPackages: ["@node-rs/argon2"],
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Prevent .node files from being bundled on the client side
-      config.externals = config.externals || [];
-      config.externals.push({
-        '@node-rs/argon2': 'commonjs @node-rs/argon2',
-      });
-    } else {
-      // For server-side, exclude node_modules from Webpack bundling
-      config.externals.push('@node-rs/argon2');
-    }
-
-    // Add a rule to handle .node files on the server
-    config.module.rules.push({
-      test: /\.node$/,
-      use: 'node-loader',
-    });
-
-    return config;
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/*`,
+      },
+    ],
+  },
+  rewrites: () => {
+    return [
+      {
+        source: "/hashtag/:tag",
+        destination: "/search?q=%23:tag",
+      },
+    ];
   },
 };
 

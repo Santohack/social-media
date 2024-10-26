@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Button, ButtonProps } from "./button";
 import { Loader2 } from "lucide-react";
+import { Button, ButtonProps } from "./ui/button";
 
 interface LoadingButtonProps extends ButtonProps {
-  loading?: boolean;
+  loading: boolean;
 }
 
 export default function LoadingButton({
@@ -18,7 +18,7 @@ export default function LoadingButton({
       className={cn("flex items-center gap-2", className)}
       {...props}
     >
-      {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+      {loading && <Loader2 className="size-5 animate-spin" />}
       {props.children}
     </Button>
   );

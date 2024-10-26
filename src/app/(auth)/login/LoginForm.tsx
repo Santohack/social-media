@@ -1,10 +1,7 @@
 "use client";
 
-import { signInSchema, SignInValues } from "@/lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { signIn } from "./action";
+import LoadingButton from "@/components/LoadingButton";
+import { PasswordInput } from "@/components/PasswordInput";
 import {
   Form,
   FormControl,
@@ -13,34 +10,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/passwordInput";
-import LoadingButton from "@/components/ui/loadingButton";
 import { Input } from "@/components/ui/input";
+import { loginSchema, LoginValues } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { login } from "./actions";
 
-export default function SignInForm() {
-  const [err, setErr] = React.useState<string>();
+export default function LoginForm() {
+  const [error, setError] = useState<string>();
+
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<SignInValues>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
       password: "",
     },
   });
-  const onSubmit = (values: SignInValues) => {
-    setErr(undefined);
+
+  async function onSubmit(values: LoginValues) {
+    setError(undefined);
     startTransition(async () => {
-      const { error } = await signIn(values);
-      if (error) {
-        setErr(error);
-      }
+      const { error } = await login(values);
+      if (error) setError(error);
     });
-  };
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        {err && <p className="text-center text-destructive">{err}</p>}
+        {error && <p className="text-center text-destructive">{error}</p>}
         <FormField
           control={form.control}
           name="username"
@@ -48,14 +49,12 @@ export default function SignInForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter username" {...field} />
+                <Input placeholder="Username" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
@@ -65,13 +64,12 @@ export default function SignInForm() {
               <FormControl>
                 <PasswordInput placeholder="Password" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoadingButton className="w-full" type="submit" loading={isPending}>
-          Sign In Now
+        <LoadingButton loading={isPending} type="submit" className="w-full">
+          Log in
         </LoadingButton>
       </form>
     </Form>

@@ -1,8 +1,8 @@
- export default function NotFound() {
+export default function NotFound() {
   return (
-    <div className="w-full my-12 space-y-3  items-center justify-center">
-      <h1 className="text-3x w-full text-center text-5xl">Not Found</h1>
-      <p className="text-center">The page you&apos;re looking for doesn&apos;t exist</p>
-    </div>
+    <main className="my-12 w-full space-y-3 text-center">
+      <h1 className="text-3xl font-bold">Not Found</h1>
+      <p>The page you are looking for does not exist.</p>
+    </main>
   );
 }

@@ -1,4 +1,4 @@
-import { PostPage } from "@/lib/types";
+import { PostsPage } from "@/lib/types";
 import {
   InfiniteData,
   QueryFilters,
@@ -24,7 +24,7 @@ export function useDeletePostMutation() {
 
       await queryClient.cancelQueries(queryFilter);
 
-      queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
         queryFilter,
         (oldData) => {
           if (!oldData) return;
